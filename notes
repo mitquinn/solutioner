@@ -1,0 +1,25 @@
+
+MODELS
+Solution
+
+id - incrementing
+issue - text
+cause - text
+solution - text
+created_at - datetime
+updated_at - datetime
+
+Tag
+id - incrementing
+name - string
+created_at - datetime
+updated_at - datetime
+
+TagSolution
+solution_id
+tag_id
+
+API
+
+
+
