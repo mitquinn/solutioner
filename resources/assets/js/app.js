@@ -17,14 +17,16 @@
 require('spark-bootstrap');
 require('./components/bootstrap');
 
+var eventHub = new Vue({});
+Vue.prototype.$eventHub = eventHub;
+Vue.component('tag', require('./components/tag.vue'));
 Vue.component('newsolution', require('./components/newsolution.vue'));
 Vue.component('solutionlist', require('./components/solutionlist.vue'));
 Vue.component('solution', require('./components/solution.vue'));
 Vue.use(require('vue-resource'));
 var app = new Vue({
-    mixins: [require('spark')]
+    mixins: [require('spark')],
 });
-
 
 
 

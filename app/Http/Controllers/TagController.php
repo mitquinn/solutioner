@@ -25,7 +25,7 @@ class TagController extends Controller
 
     public function index()
     {
-        return Response::json(Auth::user()->currentTeam->tags()->get(), 200);
+        return Response::json(Auth::user()->currentTeam->tags()->whereHas('solutions')->get(), 200);
     }
 
     public function store(Request $request)

@@ -11,34 +11,30 @@
 </style>
 
 <template>
-    <div class="col-lg-12 ">
-        <div class="panel">
-            <div class="col-xs-4 nopadding">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary" >
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </div>
+    <div>
+        <div class="col-lg-12 ">
+            <div class="input-group input-group-lg">
+                <div class="input-group-btn">
+                    <button class="btn btn-success" v-on:click="new_solution">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </button>
+                </div>
+                <input type="text" class="form-control" placeholder="Search" v-model="search" v-on:keyup="search_solutions">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" >
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
                 </div>
             </div>
+        </div>
+        <div class="col-lg-12 ">
+            <div >
+                <ul class="list-inline" style="margin-left: 2px;">
+                    <li>Filter by tag: </li>
+                    <tag v-for="tag in visible_tags" :tag="tag" :key="tag.id"></tag>
 
-            <div class="col-sm-4 nopadding ">
-                <div class="text-center">
-                    <div class="btn-group">
-                        <button class="btn btn-primary" v-on:click="create_new_solution">
-                            New Solution
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-sm-4 nopadding">
-                Select tag to filter:
-                <div>
-                   <span style="margin-left: 2px;" v-for="tag in tags" class="label label-primary">{{tag.name}}</span>
-                </div>
+                    <!--<li v-for="tag in tags" style="margin-left: 2px;" class="label label-success" v-on:click="filter_by_tag(tag)" :key="tag.id" >{{tag.name}}</li>-->
+                </ul>
             </div>
         </div>
     </div>
@@ -53,16 +49,30 @@
 
         data: function () {
             return {
-                tags: null
+                tags: null,
+                search: null
             }
         },
 
+        computed: {
+            visible_tags: {
+                get: function() {
+                    return this.tags;
+                }
+            },
+        },
+
+        created: function() {
+            this.$eventHub.$on('update_tags', this.update_tags);
+
+        },
 
         methods: {
-            create_new_solution: function() {
+            new_solution: function() {
                 var data = {issue:"New Issue"};
                 this.$http.post('/api/solutions', data).then(response => {
-                    this.$emit('new_solution', response.data);
+                    console.log(response.data);
+                    this.$eventHub.$emit('new_solution', response.data);
                 }, response => {
                     console.log(response);
                 });
@@ -74,7 +84,20 @@
                 }, response => {
                     console.log("Failed getting tags.");
                 });
+            },
+
+            update_tags: function() {
+                this.get_tags();
+            },
+
+            search_solutions: function() {
+                if(this.search.length > 4) {
+                    this.$eventHub.$emit('search_solutions', this.search);
+                } else {
+                    this.$eventHub.$emit('search_solutions_clear');
+                }
             }
+
         }
     }
 </script>

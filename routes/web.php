@@ -37,6 +37,8 @@ Route::group([
     Route::resource('solutions', 'SolutionController', ['except' => [
         'create', 'edit'
     ]]);
+    Route::post('solutions/search', 'SolutionController@search');
+    Route::post('solutions/filterbytags', 'SolutionController@filterByTags');
     Route::get('solutions/{id}/tags', 'SolutionController@tags');
     Route::post('solutions/{id}/tags', 'SolutionController@attachTag');
     Route::delete('solutions/{solution_id}/tags/{tag_id}', 'SolutionController@removeTag');
